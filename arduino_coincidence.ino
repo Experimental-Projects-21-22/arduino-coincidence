@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "counter.h"
+#include "libs/counter.h"
 #include "shiftreg.h"
 #include "math.h"
 
