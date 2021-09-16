@@ -41,7 +41,6 @@ public:
     uint32_t a_freq;
     uint32_t b_freq;
 
-
     //Initialization argument:
     //mode = "single" for single 32-bit counter configuration
     //mode = "dual" for dual 16-bit counters configuration
@@ -130,7 +129,6 @@ public:
     bool enabledCounterB();
 
     bool overFlow();
-
 
 private:
     bool _clkBenable;
