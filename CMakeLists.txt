@@ -7,26 +7,8 @@ set(${PROJECT_NAME}_BOARD mega)
 set(ARDUINO_CPU atmega2560)
 project(${PROJECT_NAME})
 
-# Define additional source and header files or default arduino sketch files
-# set(${PROJECT_NAME}_SRCS)
-# set(${PROJECT_NAME}_HDRS)
-
-### Additional static libraries to include in the target.
-# set(${PROJECT_NAME}_LIBS)
-
-### Main sketch file
-set(${PROJECT_NAME}_SKETCH arduino_coincidence.ino)
-
-### Add project directories into the build
-# add_subdirectory()
-
-### Additional settings to add non-standard or your own Arduino libraries.
-# For this example (libs will contain additional arduino libraries)
-# An Arduino library my_lib will contain files in libs/my_lib/: my_lib.h, my_lib.cpp + any other cpp files
-# link_directories(${CMAKE_CURRENT_SOURCE_DIR}/)
-
-# For nested library sources replace ${LIB_NAME} with library name for each library
-# set(_RECURSE true)
+set(${PROJECT_NAME}_SRCS arduino_coincidence.cpp libs/counter.cpp)
+set(${PROJECT_NAME}_HDRS libs/counter.h)
 
 #### Additional settings for programmer. From programmers.txt
 # set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
@@ -37,7 +19,6 @@ set(${PROJECT_NAME}_SKETCH arduino_coincidence.ino)
 # set(${PROJECT_NAME}_AFLAGS -v)
 
 generate_arduino_firmware(${PROJECT_NAME})
-
 
 print_board_list()
 print_programmer_list()
