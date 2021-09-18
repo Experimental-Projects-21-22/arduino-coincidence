@@ -19,76 +19,36 @@
 
 class CounterIC {
 public:
+    static const uint8_t buffer_size = 8;
+    
     const char *mode;
-    uint8_t GAL_pin;
-    uint8_t GAU_pin;
-    uint8_t GBL_pin;
-    uint8_t GBU_pin;
-    uint8_t CCLR_pin;
-    uint8_t RCLK_pin;
-    uint8_t RCOA_pin;
-    uint8_t CLKBEN_pin;
-    uint8_t Y0_pin;
-    uint8_t Y1_pin;
-    uint8_t Y2_pin;
-    uint8_t Y3_pin;
-    uint8_t Y4_pin;
-    uint8_t Y5_pin;
-    uint8_t Y6_pin;
-    uint8_t Y7_pin;
-    uint8_t a_trig_pin;
-    uint8_t b_trig_pin;
-    uint32_t a_freq;
-    uint32_t b_freq;
+
+    uint8_t GAL_pin = 255;
+    uint8_t GAU_pin = 255;
+
+    uint8_t GBL_pin = 255;
+    uint8_t GBU_pin = 255;
+
+    uint8_t CCLR_pin = 255;
+    uint8_t RCLK_pin = 255;
+    uint8_t RCOA_pin = 255;
+    uint8_t CLKBEN_pin = 255;
+
+    uint8_t data_pins[buffer_size] = {255};
+
+    uint8_t a_trig_pin = 255;
+    uint8_t b_trig_pin = 255;
+
+    uint32_t a_freq = 0;
+    uint32_t b_freq = 0;
 
     //Initialization argument:
     //mode = "single" for single 32-bit counter configuration
     //mode = "dual" for dual 16-bit counters configuration
-    CounterIC(const char *m) : mode(m) {
-        GAL_pin = 255;
-        GAU_pin = 255;
-        GBL_pin = 255;
-        GBU_pin = 255;
-        CCLR_pin = 255;
-        RCLK_pin = 255;
-        RCOA_pin = 255;
-        CLKBEN_pin = 255;
-        Y0_pin = 255;
-        Y1_pin = 255;
-        Y2_pin = 255;
-        Y3_pin = 255;
-        Y4_pin = 255;
-        Y5_pin = 255;
-        Y6_pin = 255;
-        Y7_pin = 255;
-        a_trig_pin = 255;
-        b_trig_pin = 255;
-        a_freq = 0;
-        b_freq = 0;
-        _clkBenable = false;
-        _updateRunning = false;
-        _single = false;
-        _overflow = false;
-        _toggle = false;
-        _clear = false;
-        _testA = false;
-        _testB = false;
-        _resetTimers = false;
-        _resetTimer1 = false;
-        _resetTimer2 = false;
-        _resetTimer3 = false;
-        t0_1 = 0;
-        t0_2 = 0;
-        t0_3 = 0;
-        tf_1 = 0;
-        tf_2 = 0;
-        tf_3 = 0;
-        testA_delay = 0;
-        testB_delay = 0;
-    }
+    explicit CounterIC(const char *m) : mode(m) {}
 
     //Pin setting functions
-    void set_data_pins(uint8_t pins[8]);
+    void set_data_pins(uint8_t pins[buffer_size]);
 
     void set_gate_pins(uint8_t gau, uint8_t gal);
 
@@ -97,8 +57,6 @@ public:
     void set_clear_pin(uint8_t cclr);
 
     void set_regclock_pin(uint8_t rclk);
-
-    void set_rcoa_pin(uint8_t rcoa);
 
     void set_clkben_pin(uint8_t clkben);
 
@@ -131,26 +89,26 @@ public:
     bool overFlow();
 
 private:
-    bool _clkBenable;
-    bool _updateRunning;
-    bool _single;
-    bool _overflow;
-    bool _toggle;
-    bool _clear;
-    bool _testA;
-    bool _testB;
-    bool _resetTimers;
-    bool _resetTimer1;
-    bool _resetTimer2;
-    bool _resetTimer3;
-    uint32_t t0_1;
-    uint32_t t0_2;
-    uint32_t t0_3;
-    uint32_t tf_1;
-    uint32_t tf_2;
-    uint32_t tf_3;
-    uint32_t testA_delay;
-    uint32_t testB_delay;
+    bool _clkBenable = false;
+    bool _updateRunning = false;
+    bool _single = false;
+    bool _overflow = false;
+    bool _toggle = false;
+    bool _clear = false;
+    bool _testA = false;
+    bool _testB = false;
+    bool _resetTimers = false;
+    bool _resetTimer1 = false;
+    bool _resetTimer2 = false;
+    bool _resetTimer3 = false;
+    uint32_t t0_1 = 0;
+    uint32_t t0_2 = 0;
+    uint32_t t0_3 = 0;
+    uint32_t tf_1 = 0;
+    uint32_t tf_2 = 0;
+    uint32_t tf_3 = 0;
+    uint32_t testA_delay = 0;
+    uint32_t testB_delay = 0;
 
     uint32_t readDataPins();
 

@@ -18,20 +18,15 @@
 #include "counter.h"
 #include <math.h>
 
-void CounterIC::set_data_pins(uint8_t pins[8]) {
+void CounterIC::set_data_pins(uint8_t pins[buffer_size]) {
     /*  Data pins on SN74LV8154 for parallel output.
      *      Y0 (LSB) -> pins[0]
      *      ...
      *      Y7 (MSB) -> pins[7]
      */
-    Y0_pin = pins[0];
-    Y1_pin = pins[1];
-    Y2_pin = pins[2];
-    Y3_pin = pins[3];
-    Y4_pin = pins[4];
-    Y5_pin = pins[5];
-    Y6_pin = pins[6];
-    Y7_pin = pins[7];
+    for (int i = 0; i < buffer_size; ++i) {
+        data_pins[i] = pins[i];
+    }
 }
 
 void CounterIC::set_gate_pins(uint8_t gau, uint8_t gal) {
@@ -162,11 +157,12 @@ void CounterIC::init() {
         _toggle = false;
     }
 
-    if (Y0_pin == 255) {
-        Serial.println("fatal error: From CounterIC::init() -- data pins (Y0-Y7) must be defined!");
-        while (1);
+    for (int i = 0; i < buffer_size; ++i) {
+        if (data_pins[i] == 255) {
+            Serial.println("fatal error: From CounterIC::init() -- data pins (Y0-Y7) must be defined!");
+            while (1);
+        }
     }
-
 
     //Initialize CCLR pin
     if (CCLR_pin != 255) {
@@ -392,22 +388,10 @@ uint32_t CounterIC::readDataPins() {
     uint32_t val = 0x00;
     uint32_t data_out = 0x00;
 
-    val = digitalRead(Y7_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y6_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y5_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y4_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y3_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y2_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y1_pin);
-    data_out = (data_out << 1) | val;
-    val = digitalRead(Y0_pin);
-    data_out = (data_out << 1) | val;
+    for (int i = 0; i < buffer_size; ++i) {
+        val = digitalRead(data_pins[i]);
+        data_out = data_out | (val << i);
+    }
 
     return data_out;
 }
