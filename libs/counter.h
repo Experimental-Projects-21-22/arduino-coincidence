@@ -20,6 +20,8 @@
 class CounterIC {
 public:
     static const uint8_t buffer_size = 8;
+    static const uint8_t unspecified_pin = 255;
+    
     enum class Mode {
         SINGLE,
         DUAL
@@ -27,21 +29,21 @@ public:
     
     const Mode mode;
 
-    uint8_t GAL_pin = 255;
-    uint8_t GAU_pin = 255;
+    uint8_t GAL_pin = unspecified_pin;
+    uint8_t GAU_pin = unspecified_pin;
 
-    uint8_t GBL_pin = 255;
-    uint8_t GBU_pin = 255;
+    uint8_t GBL_pin = unspecified_pin;
+    uint8_t GBU_pin = unspecified_pin;
 
-    uint8_t CCLR_pin = 255;
-    uint8_t RCLK_pin = 255;
-    uint8_t RCOA_pin = 255;
-    uint8_t CLKBEN_pin = 255;
+    uint8_t CCLR_pin = unspecified_pin;
+    uint8_t RCLK_pin = unspecified_pin;
+    uint8_t RCOA_pin = unspecified_pin;
+    uint8_t CLKBEN_pin = unspecified_pin;
 
-    uint8_t data_pins[buffer_size] = {255};
+    uint8_t data_pins[buffer_size] = {unspecified_pin};
 
-    uint8_t a_trig_pin = 255;
-    uint8_t b_trig_pin = 255;
+    uint8_t a_trig_pin = unspecified_pin;
+    uint8_t b_trig_pin = unspecified_pin;
 
     uint32_t a_freq = 0;
     uint32_t b_freq = 0;

@@ -103,14 +103,14 @@ void CounterIC::set_testB_freq(uint32_t fb) {
 
 void CounterIC::init() {
     //Single 32-bit counter mode requires specific pin configuration
-    if (mode == Mode::SINGLE && (CLKBEN_pin != 255 || RCOA_pin != 255)) {
+    if (mode == Mode::SINGLE && (CLKBEN_pin != unspecified_pin || RCOA_pin != unspecified_pin)) {
         Serial.println(
                 "fatal error: From CounterIC::init() -- cannot define CLKBEN or RCOA pins for single counter mode.");
         while (1);
     }
 
     //Initialize Gate pins
-    if (GAL_pin == 255 || GAU_pin == 255 || GBL_pin == 255 || GBU_pin == 255) {
+    if (GAL_pin == unspecified_pin || GAU_pin == unspecified_pin || GBL_pin == unspecified_pin || GBU_pin == unspecified_pin) {
         Serial.println("fatal error: From CounterIC::init() -- all gate pins must be defined!");
         while (1);
     } else {
@@ -125,7 +125,7 @@ void CounterIC::init() {
     }
 
     //Initialize Register Clock
-    if (RCLK_pin != 255) {
+    if (RCLK_pin != unspecified_pin) {
         pinMode(RCLK_pin, OUTPUT);
         digitalWrite(RCLK_pin, LOW);
     } else {
@@ -133,7 +133,7 @@ void CounterIC::init() {
     }
 
     //Initialize overflow status pin
-    if (RCOA_pin != 255) {
+    if (RCOA_pin != unspecified_pin) {
         _overflow = true;
         pinMode(RCOA_pin, INPUT_PULLUP);
     } else {
@@ -141,7 +141,7 @@ void CounterIC::init() {
     }
 
     //Initialize Clock B enable pin
-    if (CLKBEN_pin != 255) {
+    if (CLKBEN_pin != unspecified_pin) {
         _clkBenable = true;
         _toggle = true;
         pinMode(CLKBEN_pin, OUTPUT);
@@ -152,14 +152,14 @@ void CounterIC::init() {
     }
 
     for (int i = 0; i < buffer_size; ++i) {
-        if (data_pins[i] == 255) {
+        if (data_pins[i] == unspecified_pin) {
             Serial.println("fatal error: From CounterIC::init() -- data pins (Y0-Y7) must be defined!");
             while (1);
         }
     }
 
     //Initialize CCLR pin
-    if (CCLR_pin != 255) {
+    if (CCLR_pin != unspecified_pin) {
         _clear = true;
         pinMode(CCLR_pin, OUTPUT);
         digitalWrite(CCLR_pin, HIGH);
@@ -168,7 +168,7 @@ void CounterIC::init() {
     }
 
     //Initialize test pins
-    if (a_trig_pin != 255) {
+    if (a_trig_pin != unspecified_pin) {
         _testA = true;
         pinMode(a_trig_pin, OUTPUT);
         digitalWrite(a_trig_pin, LOW);
@@ -177,7 +177,7 @@ void CounterIC::init() {
     } else {
         _testA = false;
     }
-    if (b_trig_pin != 255) {
+    if (b_trig_pin != unspecified_pin) {
         _testB = true;
         pinMode(b_trig_pin, OUTPUT);
         digitalWrite(b_trig_pin, LOW);
