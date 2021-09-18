@@ -103,16 +103,10 @@ void CounterIC::set_testB_freq(uint32_t fb) {
 
 void CounterIC::init() {
     //Single 32-bit counter mode requires specific pin configuration
-    if (strcmp(mode, "single") == 0) {
-        _single = true;
-        //Single counter mode requires CLKBEN to be connected to RCOA
-        if (CLKBEN_pin != 255 || RCOA_pin != 255) {
-            Serial.println(
-                    "fatal error: From CounterIC::init() -- cannot define CLKBEN or RCOA pins for single counter mode.");
-            while (1);
-        }
-    } else {
-        _single = false;
+    if (mode == Mode::SINGLE && (CLKBEN_pin != 255 || RCOA_pin != 255)) {
+        Serial.println(
+                "fatal error: From CounterIC::init() -- cannot define CLKBEN or RCOA pins for single counter mode.");
+        while (1);
     }
 
     //Initialize Gate pins
@@ -311,7 +305,7 @@ uint32_t CounterIC::readCounter_32bit() {
      *  library when an overflow occurs on Counter A.
      */
     uint32_t ret = 0xFFFF;
-    if (_single) {
+    if (mode == Mode::SINGLE) {
         uint32_t high_byte = readCounter("A");
         uint32_t low_byte = readCounter("B");
         ret = (high_byte << 16) | low_byte;

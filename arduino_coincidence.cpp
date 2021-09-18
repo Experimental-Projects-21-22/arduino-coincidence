@@ -10,7 +10,7 @@
  * the shift register.
  */
 
-CounterIC cnt("dual");
+CounterIC cnt(CounterIC::Mode::DUAL);
 
 uint32_t tf;
 uint32_t t0_1;

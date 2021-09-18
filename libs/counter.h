@@ -20,8 +20,12 @@
 class CounterIC {
 public:
     static const uint8_t buffer_size = 8;
+    enum class Mode {
+        SINGLE,
+        DUAL
+    };
     
-    const char *mode;
+    const Mode mode;
 
     uint8_t GAL_pin = 255;
     uint8_t GAU_pin = 255;
@@ -42,10 +46,7 @@ public:
     uint32_t a_freq = 0;
     uint32_t b_freq = 0;
 
-    //Initialization argument:
-    //mode = "single" for single 32-bit counter configuration
-    //mode = "dual" for dual 16-bit counters configuration
-    explicit CounterIC(const char *m) : mode(m) {}
+    explicit CounterIC(Mode mode) : mode(mode) {}
 
     //Pin setting functions
     void set_data_pins(uint8_t pins[buffer_size]);
@@ -91,7 +92,6 @@ public:
 private:
     bool _clkBenable = false;
     bool _updateRunning = false;
-    bool _single = false;
     bool _overflow = false;
     bool _toggle = false;
     bool _clear = false;
