@@ -18,87 +18,15 @@
 #include "counter.h"
 #include <math.h>
 
-void CounterIC::set_data_pins(uint8_t pins[buffer_size]) {
+void CounterIC::set_data_pins(uint8_t pins[bus_size]) {
     /*  Data pins on SN74LV8154 for parallel output.
      *      Y0 (LSB) -> pins[0]
      *      ...
      *      Y7 (MSB) -> pins[7]
      */
-    for (int i = 0; i < buffer_size; ++i) {
+    for (int i = 0; i < bus_size; ++i) {
         data_pins[i] = pins[i];
     }
-}
-
-void CounterIC::set_gate_pins(uint8_t gau, uint8_t gal) {
-    /*  Gate A pins on SN74LV8154
-     *      GAL: Gate A lower byte; active-low puts lower byte of stored counter A on Y bus.
-     *      GAU: Gate A upper byte; active-low puts upper byte of stored counter A on Y bus.
-     */
-    GAU_pin = gau;
-    GAL_pin = gal;
-}
-
-void CounterIC::set_gate_pins(uint8_t gau, uint8_t gal, uint8_t gbu, uint8_t gbl) {
-    /*  Gate A and B pins on SN74LV8154
-     *      GAL: Gate A lower byte; active-low puts lower byte of stored counter A on Y bus.
-     *      GAU: Gate A upper byte; active-low puts upper byte of stored counter A on Y bus.
-     *      GBL: Gate B lower byte; active-low puts lower byte of stored counter B on Y bus.
-     *      GBU: Gate B upper byte; active-low puts upper byte of stored counter B on Y bus
-     */
-    GAU_pin = gau;
-    GAL_pin = gal;
-    GBU_pin = gbu;
-    GBL_pin = gbl;
-}
-
-void CounterIC::set_clear_pin(uint8_t cclr) {
-    /*  CCLR pin on SN74LV8154
-     *      CCLR: Clock clear, async active-low clear for both counters.
-     */
-    CCLR_pin = cclr;
-}
-
-void CounterIC::set_regclock_pin(uint8_t rclk) {
-    /*  RCLK pin on SN74LV8154
-     *      RCLK: Register clock, rising edge stores counters into internal storage register.
-     */
-    RCLK_pin = rclk;
-}
-
-void CounterIC::set_clkben_pin(uint8_t clkben) {
-    /*  Clock B enable pin on SN74LV8154
-     *      CLKBEN: Clock B enable; active-low allows clocking for counter B; connect to RCOA for 32-bit counter.
-     */
-    CLKBEN_pin = clkben;
-}
-
-void CounterIC::set_test_pins(uint8_t a) {
-    /*  Test pin for Counter A on SN74LV8154
-     *  Set this pin to a digital output pin on the Arduino to perform controlled testing
-     *  of the counter; Connect to CLKA (Pin 1 on SN74LV8154).
-     */
-    a_trig_pin = a;
-}
-
-void CounterIC::set_test_pins(uint8_t a, uint8_t b) {
-    /*  Test pins for Counters A and B on SN74LV8154
-     *  Set these pins to two digital output pins on the Arduino to perform controlled testing
-     *  of counters A and B; Connect to CLKA (Pin 1 on SN74LV8154) and CLKB (Pin 2)
-     */
-    a_trig_pin = a;
-    b_trig_pin = b;
-}
-
-void CounterIC::set_testA_freq(uint32_t fa) {
-    /*  Set frequency in Hz for testing Counter A
-     */
-    a_freq = fa;
-}
-
-void CounterIC::set_testB_freq(uint32_t fb) {
-    /*  Set frequency in Hz for testing Counter B
-     */
-    b_freq = fb;
 }
 
 void CounterIC::init() {
@@ -110,7 +38,8 @@ void CounterIC::init() {
     }
 
     //Initialize Gate pins
-    if (GAL_pin == unspecified_pin || GAU_pin == unspecified_pin || GBL_pin == unspecified_pin || GBU_pin == unspecified_pin) {
+    if (GAL_pin == unspecified_pin || GAU_pin == unspecified_pin || GBL_pin == unspecified_pin ||
+        GBU_pin == unspecified_pin) {
         Serial.println("fatal error: From CounterIC::init() -- all gate pins must be defined!");
         while (1);
     } else {
@@ -151,7 +80,7 @@ void CounterIC::init() {
         _toggle = false;
     }
 
-    for (int i = 0; i < buffer_size; ++i) {
+    for (int i = 0; i < bus_size; ++i) {
         if (data_pins[i] == unspecified_pin) {
             Serial.println("fatal error: From CounterIC::init() -- data pins (Y0-Y7) must be defined!");
             while (1);
@@ -168,19 +97,19 @@ void CounterIC::init() {
     }
 
     //Initialize test pins
-    if (a_trig_pin != unspecified_pin) {
+    if (CLKA_pin != unspecified_pin) {
         _testA = true;
-        pinMode(a_trig_pin, OUTPUT);
-        digitalWrite(a_trig_pin, LOW);
+        pinMode(CLKA_pin, OUTPUT);
+        digitalWrite(CLKA_pin, LOW);
         testA_delay = (uint32_t) round((1.0 / a_freq) * 1E6);
         _resetTimers = true;
     } else {
         _testA = false;
     }
-    if (b_trig_pin != unspecified_pin) {
+    if (CLKB_pin != unspecified_pin) {
         _testB = true;
-        pinMode(b_trig_pin, OUTPUT);
-        digitalWrite(b_trig_pin, LOW);
+        pinMode(CLKB_pin, OUTPUT);
+        digitalWrite(CLKB_pin, LOW);
         testB_delay = (uint32_t) round((1.0 / b_freq) * 1E6);
         _resetTimers = true;
     } else {
@@ -217,7 +146,7 @@ void CounterIC::update() {
         }
 
         if (tf_2 - t0_2 >= testA_delay / 2) {
-            digitalWrite(a_trig_pin, !digitalRead(a_trig_pin));
+            digitalWrite(CLKA_pin, !digitalRead(CLKA_pin));
             _resetTimer2 = true;
         }
     }
@@ -230,7 +159,7 @@ void CounterIC::update() {
         }
 
         if (tf_3 - t0_3 >= testB_delay / 2) {
-            digitalWrite(b_trig_pin, !digitalRead(b_trig_pin));
+            digitalWrite(CLKB_pin, !digitalRead(CLKB_pin));
             _resetTimer3 = true;
         }
     }
@@ -382,7 +311,7 @@ uint32_t CounterIC::readDataPins() {
     uint32_t val = 0x00;
     uint32_t data_out = 0x00;
 
-    for (int i = 0; i < buffer_size; ++i) {
+    for (int i = 0; i < bus_size; ++i) {
         val = digitalRead(data_pins[i]);
         data_out = data_out | (val << i);
     }

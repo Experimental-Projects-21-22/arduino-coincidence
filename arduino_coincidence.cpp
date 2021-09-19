@@ -25,9 +25,10 @@ void setup() {
     cnt.RCLK_pin = 36;
     uint8_t dpins[] = {16, 17, 18, 19, 20, 21, 22, 23};    //Uncomment for parallel-to-Arduino
     cnt.set_data_pins(dpins);
-    cnt.set_test_pins(30, 31);
-    cnt.set_testA_freq(100);
-    cnt.set_testB_freq(10);
+    cnt.CLKA_pin = 30;
+    cnt.CLKB_pin = 31;
+    cnt.a_freq = 100;
+    cnt.b_freq = 10;
     cnt.init();
 
     Serial.begin(115200);

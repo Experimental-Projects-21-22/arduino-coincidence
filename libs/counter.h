@@ -10,6 +10,8 @@
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
   Lesser General Public License for more details.
+
+  Modified by Julian van Doorn.
  */
 
 #ifndef COUNTER_H_
@@ -19,7 +21,7 @@
 
 class CounterIC {
 public:
-    static const uint8_t buffer_size = 8;
+    static const uint8_t bus_size = 8;
     static const uint8_t unspecified_pin = 255;
     
     enum class Mode {
@@ -29,53 +31,48 @@ public:
     
     const Mode mode;
 
+    // Gate A lower byte, active-low puts lower byte of counter A on the Y bus.
     uint8_t GAL_pin = unspecified_pin;
+    // Gate A upper byte, active-low puts upper byte of counter A on the Y bus.
     uint8_t GAU_pin = unspecified_pin;
 
+    // Gate B lower byte, active-low puts lower byte of counter A on the Y bus.
     uint8_t GBL_pin = unspecified_pin;
+    // Gate B upper byte, active-low puts upper byte of counter A on the Y bus.
     uint8_t GBU_pin = unspecified_pin;
 
+    // Clock clear, asynchronous active-low clear for both counters
     uint8_t CCLR_pin = unspecified_pin;
+    // Register Clock, rising edge stores counters into an internal storage register.
     uint8_t RCLK_pin = unspecified_pin;
+    // Ready case overflow A, active low when counter A is full count and ready to overflow on next clock A.
     uint8_t RCOA_pin = unspecified_pin;
+    // Clock B enable, active-low allows clocking for counter B; connect to RCOA for 32-bit counter.
     uint8_t CLKBEN_pin = unspecified_pin;
 
-    uint8_t data_pins[buffer_size] = {unspecified_pin};
+    // Data output bits 0 - 7, data_pins[0] -> Y0 (LSB) - data_pins[7] -> Y7 (MSB).
+    uint8_t data_pins[bus_size] = {unspecified_pin};
 
-    uint8_t a_trig_pin = unspecified_pin;
-    uint8_t b_trig_pin = unspecified_pin;
+    // Clock A, rising edge count clock - used for testing.
+    uint8_t CLKA_pin = unspecified_pin;
+    // Clock B, rising edge count clock - used for testing.
+    uint8_t CLKB_pin = unspecified_pin;
 
+    // Count frequency for A - used for testing.
     uint32_t a_freq = 0;
+    // Count frequency for B - used for testing.
     uint32_t b_freq = 0;
 
+    // Constructor
     explicit CounterIC(Mode mode) : mode(mode) {}
 
-    //Pin setting functions
-    void set_data_pins(uint8_t pins[buffer_size]);
+    // Pin setting functions
+    void set_data_pins(uint8_t pins[bus_size]);
 
-    void set_gate_pins(uint8_t gau, uint8_t gal);
-
-    void set_gate_pins(uint8_t gau, uint8_t gal, uint8_t gbu, uint8_t gbl);
-
-    void set_clear_pin(uint8_t cclr);
-
-    void set_regclock_pin(uint8_t rclk);
-
-    void set_clkben_pin(uint8_t clkben);
-
-    void set_test_pins(uint8_t a);
-
-    void set_test_pins(uint8_t a, uint8_t b);
-
-    //Configuration functions
-    void set_testA_freq(uint32_t fa);
-
-    void set_testB_freq(uint32_t fb);
-
-    //Initialization function
+    // Initialization function
     void init();
 
-    //Update function
+    // Update function
     void update();
 
     //Counter functions
