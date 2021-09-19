@@ -28,6 +28,10 @@ public:
         SINGLE,
         DUAL
     };
+    enum class Register {
+        A,
+        B
+    };
     
     const Mode mode;
 
@@ -76,7 +80,7 @@ public:
     void update();
 
     //Counter functions
-    uint32_t readCounter(const char *ab);
+    uint32_t readCounter(Register reg);
 
     uint32_t readCounter_32bit();
 

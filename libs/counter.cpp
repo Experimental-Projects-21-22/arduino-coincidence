@@ -172,7 +172,7 @@ void CounterIC::update() {
     }
 }
 
-uint32_t CounterIC::readCounter(const char *ab) {
+uint32_t CounterIC::readCounter(Register reg) {
     /*  Read the value stored on the internal register of the SN74LV8154
      *  Argument: "A" for counter A
      *			  "B" for counter B
@@ -195,7 +195,7 @@ uint32_t CounterIC::readCounter(const char *ab) {
     digitalWrite(RCLK_pin, LOW);
 
     //Read A counter
-    if (strcmp(ab, "A") == 0 || strcmp(ab, "a") == 0) {
+    if (reg == Register::A) {
         digitalWrite(GAU_pin, LOW);
         delayMicroseconds(2);
         data_out = readDataPins();
@@ -205,23 +205,20 @@ uint32_t CounterIC::readCounter(const char *ab) {
         delayMicroseconds(2);
         data_out = (data_out << 8) | readDataPins();
         digitalWrite(GAL_pin, HIGH);
-    }
-
-    //Read B counter
-    if (strcmp(ab, "B") == 0 || strcmp(ab, "b") == 0) {
-        if (_clkBenable) {
-            digitalWrite(GBU_pin, LOW);
-            delayMicroseconds(2);
-            data_out = readDataPins();
-            digitalWrite(GBU_pin, HIGH);
-
-            digitalWrite(GBL_pin, LOW);
-            delayMicroseconds(2);
-            data_out = (data_out << 8) | readDataPins();
-            digitalWrite(GBL_pin, HIGH);
-        } else {
+    } else if (reg == Register::B) {
+        if (!_clkBenable) {
             Serial.println("warning: From CounterIC::readCounter() -- counter B is not enabled, cannot read.");
+            return data_out;
         }
+        digitalWrite(GBU_pin, LOW);
+        delayMicroseconds(2);
+        data_out = readDataPins();
+        digitalWrite(GBU_pin, HIGH);
+
+        digitalWrite(GBL_pin, LOW);
+        delayMicroseconds(2);
+        data_out = (data_out << 8) | readDataPins();
+        digitalWrite(GBL_pin, HIGH);
     }
 
     return data_out;
@@ -235,8 +232,8 @@ uint32_t CounterIC::readCounter_32bit() {
      */
     uint32_t ret = 0xFFFF;
     if (mode == Mode::SINGLE) {
-        uint32_t high_byte = readCounter("A");
-        uint32_t low_byte = readCounter("B");
+        uint32_t high_byte = readCounter(Register::A);
+        uint32_t low_byte = readCounter(Register::B);
         ret = (high_byte << 16) | low_byte;
     } else {
         Serial.println(

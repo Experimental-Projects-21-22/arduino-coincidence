@@ -45,8 +45,8 @@ void loop() {
 
         //Spacebar input gets Counter A and B values and prints to serial terminal
         if (in_byte == 0x20) {
-            uint32_t countsA = cnt.readCounter("A");
-            uint32_t countsB = cnt.readCounter("B");
+            uint32_t countsA = cnt.readCounter(CounterIC::Register::A);
+            uint32_t countsB = cnt.readCounter(CounterIC::Register::B);
             Serial.println("*******************************");
             Serial.print("Counts on A: ");
             Serial.println(countsA);
