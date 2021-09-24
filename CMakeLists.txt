@@ -11,12 +11,12 @@ set(${PROJECT_NAME}_SRCS arduino_coincidence.cpp libs/counter.cpp)
 set(${PROJECT_NAME}_HDRS libs/counter.h)
 
 #### Additional settings for programmer. From programmers.txt
-# set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
-# set(${PROJECT_NAME}_PORT /dev/cu.usbserial-00000000)
-# set(mega.upload.speed 9600)
+set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
+set(${PROJECT_NAME}_PORT /dev/cu.usbmodem14401)
+set(mega.upload.speed 9600)
 
 ## Verbose build process
-# set(${PROJECT_NAME}_AFLAGS -v)
+set(${PROJECT_NAME}_AFLAGS -v)
 
 generate_arduino_firmware(${PROJECT_NAME})
 
