@@ -17,16 +17,22 @@ uint32_t t0_1;
 uint32_t t0_2;
 
 void setup() {
-    cnt.GAL_pin = 48;
-    cnt.GAU_pin = 50;
-    cnt.GBL_pin = 52;
-    cnt.GBU_pin = 53;
-    cnt.CCLR_pin = 42;
-    cnt.RCLK_pin = 36;
-    uint8_t dpins[] = {16, 17, 18, 19, 20, 21, 22, 23};    //Uncomment for parallel-to-Arduino
+    cnt.GAL_pin = 24;
+    cnt.GAU_pin = 25;
+
+    cnt.GBL_pin = 26;
+    cnt.GBU_pin = 27;
+
+    cnt.RCLK_pin = 28;
+
+    cnt.CCLR_pin = 29;
+
+    uint8_t dpins[] = {30, 31, 32, 33, 34, 35, 36, 37};
     cnt.set_data_pins(dpins);
-    cnt.CLKA_pin = 30;
-    cnt.CLKB_pin = 31;
+
+    cnt.CLKA_pin = 22;
+    cnt.CLKB_pin = 23;
+
     cnt.a_freq = 100;
     cnt.b_freq = 10;
     cnt.init();
