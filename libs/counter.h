@@ -21,6 +21,18 @@
 
 class CounterIC {
 public:
+    CounterIC() = default;
+
+    // Sets the mode of each pin and prepares the counters.
+    void setup() const;
+
+    // Reads the value of the counter.
+    uint32_t read_counter();
+
+    // Resets the counter to 0.
+    void reset_counter() const;
+
+private:
     static const uint8_t bus_size = 8;
 
     enum class Register {
@@ -46,18 +58,10 @@ public:
     // Data output bits 0 - 7, bus_pins[0] -> Y0 (LSB) - bus_pins[7] -> Y7 (MSB).
     const uint8_t bus_pins[bus_size] = {30, 31, 32, 33, 34, 35, 36, 37};
 
-    // Constructor
-    CounterIC() = default;
-
-    // Initialization function
-    void setup() const;
-
-    uint32_t read_counter();
-
-    void clear_counter() const;
-
+    // Reads the byte that is currently on the Y bus.
     uint32_t read_bus();
 
+    // Reads a whole register (16 bit).
     uint32_t read_register(Register reg);
 };
 

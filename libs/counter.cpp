@@ -87,7 +87,7 @@ uint32_t CounterIC::read_counter() {
     return (high_byte << 16) | low_byte;
 }
 
-void CounterIC::clear_counter() const {
+void CounterIC::reset_counter() const {
     /*  This function clears the values stored in the internal register in the SN74LV8154
      *  for both counters A and B.
      */

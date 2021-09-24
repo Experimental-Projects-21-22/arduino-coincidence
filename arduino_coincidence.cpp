@@ -30,7 +30,7 @@ void loop() {
             Serial.println("*******************************");
         } else if (in_byte == 0x63) {
             //"c" input clears the counters
-            counter.clear_counter();
+            counter.reset_counter();
             Serial.println("Counters cleared!");
         }
     }
