@@ -22,7 +22,6 @@
 class CounterIC {
 public:
     static const uint8_t bus_size = 8;
-    static const uint8_t unspecified_pin = 255;
 
     enum class Register {
         A,
@@ -30,39 +29,36 @@ public:
     };
 
     // Register A lower byte, active-low puts lower byte of counter A on the Y bus.
-    uint8_t GAL_pin = unspecified_pin;
+    const uint8_t GAL_pin = 24;
     // Register A upper byte, active-low puts upper byte of counter A on the Y bus.
-    uint8_t GAU_pin = unspecified_pin;
+    const uint8_t GAU_pin = 25;
 
-    // Register B lower byte, active-low puts lower byte of counter A on the Y bus.
-    uint8_t GBL_pin = unspecified_pin;
-    // Register B upper byte, active-low puts upper byte of counter A on the Y bus.
-    uint8_t GBU_pin = unspecified_pin;
+    // Register B lower byte, active-low puts lower byte of counter B on the Y bus.
+    const uint8_t GBL_pin = 26;
+    // Register B upper byte, active-low puts upper byte of counter B on the Y bus.
+    const uint8_t GBU_pin = 27;
 
-    // Clock clear, asynchronous active-low clear for both counters
-    uint8_t CCLR_pin = unspecified_pin;
     // Register Clock, rising edge stores counters into an internal storage register.
-    uint8_t RCLK_pin = unspecified_pin;
+    const uint8_t RCLK_pin = 28;
+    // Clock clear, asynchronous active-low clear for both counters
+    const uint8_t CCLR_pin = 29;
 
-    // Data output bits 0 - 7, data_pins[0] -> Y0 (LSB) - data_pins[7] -> Y7 (MSB).
-    uint8_t data_pins[bus_size] = {unspecified_pin};
+    // Data output bits 0 - 7, bus_pins[0] -> Y0 (LSB) - bus_pins[7] -> Y7 (MSB).
+    const uint8_t bus_pins[bus_size] = {30, 31, 32, 33, 34, 35, 36, 37};
 
     // Constructor
-    CounterIC() {};
-
-    // Pin setting functions
-    void set_data_pins(uint8_t pins[bus_size]);
+    CounterIC() = default;
 
     // Initialization function
-    void init();
+    void setup() const;
 
-    uint32_t readCounter_32bit();
+    uint32_t read_counter();
 
-    void clearCounters();
+    void clear_counter() const;
 
-    uint32_t readDataPins();
+    uint32_t read_bus();
 
-    uint32_t readCounter(Register reg);
+    uint32_t read_register(Register reg);
 };
 
 #endif /* COUNTER_H_ */

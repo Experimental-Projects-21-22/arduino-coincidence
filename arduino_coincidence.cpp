@@ -12,20 +12,7 @@
 CounterIC counter;
 
 void setup() {
-    counter.GAL_pin = 24;
-    counter.GAU_pin = 25;
-
-    counter.GBL_pin = 26;
-    counter.GBU_pin = 27;
-
-    counter.RCLK_pin = 28;
-
-    counter.CCLR_pin = 29;
-
-    uint8_t dpins[] = {30, 31, 32, 33, 34, 35, 36, 37};
-    counter.set_data_pins(dpins);
-
-    counter.init();
+    counter.setup();
 
     Serial.begin(115200);
 }
@@ -36,14 +23,14 @@ void loop() {
 
         if (in_byte == 0x6D) {
             // "m" input gets Counter A and B values and prints to serial terminal
-            uint32_t counts = counter.readCounter_32bit();
+            uint32_t counts = counter.read_counter();
             Serial.println("*******************************");
             Serial.print("Counts: ");
             Serial.println(counts);
             Serial.println("*******************************");
         } else if (in_byte == 0x63) {
             //"c" input clears the counters
-            counter.clearCounters();
+            counter.clear_counter();
             Serial.println("Counters cleared!");
         }
     }
