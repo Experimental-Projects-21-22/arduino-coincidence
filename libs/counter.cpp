@@ -31,7 +31,7 @@ void CounterIC::set_data_pins(uint8_t pins[bus_size]) {
 
 void CounterIC::init() {
     //Single 32-bit counter mode requires specific pin configuration
-    if (mode == Mode::SINGLE && (CLKBEN_pin != unspecified_pin || RCOA_pin != unspecified_pin)) {
+    if (mode == Mode::SINGLE && CLKBEN_pin != unspecified_pin) {
         Serial.println(
                 "fatal error: From CounterIC::init() -- cannot define CLKBEN or RCOA pins for single counter mode.");
         while (1);
@@ -163,13 +163,6 @@ void CounterIC::update() {
             _resetTimer3 = true;
         }
     }
-
-    //Handle Overflow status
-    if (_overflow) {
-        if (digitalRead(RCOA_pin) == LOW) {
-            Serial.println("Counter A is full!");
-        }
-    }
 }
 
 uint32_t CounterIC::readCounter(Register reg) {
@@ -255,25 +248,6 @@ void CounterIC::toggleCounterB() {
         Serial.println(
                 "error: From CounterIC::toggleCounterB() -- cannot toggle counter B since CLKBEN pin was not defined.");
     }
-}
-
-bool CounterIC::overFlow() {
-    /* Returns the status of the overflow pin RCOA
-     */
-    bool ret = false;
-
-    if (_overflow) {
-        if (digitalRead(RCOA_pin) == HIGH) {
-            ret = false;
-        } else {
-            ret = true;
-        }
-    } else {
-        Serial.println(
-                "error: From CounterIC::overFlow() -- this function cannot be called because RCOA pin was not defined");
-    }
-
-    return ret;
 }
 
 bool CounterIC::enabledCounterB() {

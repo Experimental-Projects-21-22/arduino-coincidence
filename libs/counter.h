@@ -49,8 +49,6 @@ public:
     uint8_t CCLR_pin = unspecified_pin;
     // Register Clock, rising edge stores counters into an internal storage register.
     uint8_t RCLK_pin = unspecified_pin;
-    // Ready case overflow A, active low when counter A is full count and ready to overflow on next clock A.
-    uint8_t RCOA_pin = unspecified_pin;
     // Clock B enable, active-low allows clocking for counter B; connect to RCOA for 32-bit counter.
     uint8_t CLKBEN_pin = unspecified_pin;
 
@@ -89,8 +87,6 @@ public:
     void toggleCounterB();
 
     bool enabledCounterB();
-
-    bool overFlow();
 
 private:
     bool _clkBenable = false;

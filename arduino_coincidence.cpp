@@ -77,16 +77,6 @@ void loop() {
             t0_2 = millis();
         }
 
-            //"i" input gets status of counter A overflow
-        else if (in_byte == 0x69) {
-            Serial.print("Counter A overflow status: ");
-            if (cnt.overFlow()) {
-                Serial.print("True");
-            } else {
-                Serial.print("False");
-            }
-        }
-
             //"t" input toggles counter B on/off
         else if (in_byte == 0x74) {
             cnt.toggleCounterB();
