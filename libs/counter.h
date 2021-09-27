@@ -13,8 +13,6 @@
 #ifndef COUNTER_H_
 #define COUNTER_H_
 
-#include "Arduino.h"
-
 class CounterIC {
 public:
     CounterIC() = default;
