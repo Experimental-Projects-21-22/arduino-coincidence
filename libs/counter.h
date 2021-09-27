@@ -59,10 +59,10 @@ private:
     const uint8_t bus_pins[bus_size] = {30, 31, 32, 33, 34, 35, 36, 37};
 
     // Reads the byte that is currently on the Y bus.
-    uint32_t read_bus(Register reg, Byte byte);
+    uint8_t read_bus(Register reg, Byte byte);
 
     // Reads a whole register (16 bit).
-    uint32_t read_register(Register reg);
+    uint16_t read_register(Register reg);
 
     // Puts the counts onto the registers such that they can be read.
     void save_counts_to_register();

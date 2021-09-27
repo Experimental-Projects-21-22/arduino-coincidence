@@ -36,7 +36,7 @@ void CounterIC::save_counts_to_register() {
     digitalWrite(RCLK_pin, LOW);
 }
 
-uint32_t CounterIC::read_register(Register reg) {
+uint16_t CounterIC::read_register(Register reg) {
     /*  Read the value stored on the internal register of the SN74LV8154
      *  Argument: "A" for counter A
      *			  "B" for counter B
@@ -45,11 +45,7 @@ uint32_t CounterIC::read_register(Register reg) {
      *  this function will attempt to read the parallel data pins from the
      *  SN74LV8154 by default.
      */
-    if (reg == Register::A) {
-        return read_bus(reg, Byte::Upper) | read_bus(reg, Byte::Lower);
-    } else {
-        return (read_bus(reg, Byte::Upper) | read_bus(reg, Byte::Lower)) << 16;
-    }
+    return read_bus(reg, Byte::Upper) << 8 | read_bus(reg, Byte::Lower);
 }
 
 uint32_t CounterIC::read_counter() {
@@ -59,7 +55,7 @@ uint32_t CounterIC::read_counter() {
      *  library when an overflow occurs on Counter A.
      */
     save_counts_to_register();
-    return read_register(Register::A) | read_register(Register::B);
+    return read_register(Register::B) << 16 | read_register(Register::A);
 }
 
 void CounterIC::reset_counter() const {
@@ -71,8 +67,8 @@ void CounterIC::reset_counter() const {
     digitalWrite(CCLR_pin, HIGH);
 }
 
-uint32_t CounterIC::read_bus(Register reg, Byte byte) {
-    uint32_t data_out = 0x00;
+uint8_t CounterIC::read_bus(Register reg, Byte byte) {
+    uint8_t data_out = 0;
 
     uint8_t pin = reg == Register::A ?
                   (byte == Byte::Lower ? GAL_pin : GAU_pin) :
@@ -87,9 +83,5 @@ uint32_t CounterIC::read_bus(Register reg, Byte byte) {
 
     digitalWrite(pin, HIGH);
 
-    if (byte == Byte::Lower) {
-        return data_out;
-    } else {
-        return data_out << 8;
-    }
+    return data_out;
 }
