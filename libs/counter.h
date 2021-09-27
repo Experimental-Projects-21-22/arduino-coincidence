@@ -65,7 +65,7 @@ private:
     uint16_t read_register(Register reg);
 
     // Puts the counts onto the registers such that they can be read.
-    void save_counts_to_register();
+    void save_counts_to_register() const;
 };
 
 #endif /* COUNTER_H_ */

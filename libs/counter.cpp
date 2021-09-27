@@ -34,7 +34,7 @@ void CounterIC::setup() const {
     }
 }
 
-void CounterIC::save_counts_to_register() {
+void CounterIC::save_counts_to_register() const {
     digitalWrite(RCLK_pin, HIGH);
     delayMicroseconds(2);
     digitalWrite(RCLK_pin, LOW);
