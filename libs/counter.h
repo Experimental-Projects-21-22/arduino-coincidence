@@ -59,6 +59,9 @@ private:
 
     // Reads a whole register (16 bit).
     uint32_t read_register(Register reg);
+
+    // Puts the counts onto the registers such that they can be read.
+    void save_counts_to_register();
 };
 
 #endif /* COUNTER_H_ */

@@ -30,6 +30,12 @@ void CounterIC::setup() const {
     digitalWrite(CCLR_pin, HIGH);
 }
 
+void CounterIC::save_counts_to_register() {
+    digitalWrite(RCLK_pin, HIGH);
+    delayMicroseconds(2);
+    digitalWrite(RCLK_pin, LOW);
+}
+
 uint32_t CounterIC::read_register(Register reg) {
     /*  Read the value stored on the internal register of the SN74LV8154
      *  Argument: "A" for counter A
@@ -41,9 +47,7 @@ uint32_t CounterIC::read_register(Register reg) {
      */
     uint32_t data_out = 0x00;
 
-    digitalWrite(RCLK_pin, HIGH);
-    delayMicroseconds(2);
-    digitalWrite(RCLK_pin, LOW);
+    save_counts_to_register();
 
     //Read A counter
     if (reg == Register::A) {
