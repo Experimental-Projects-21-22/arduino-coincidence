@@ -28,6 +28,10 @@ void CounterIC::setup() const {
 
     pinMode(CCLR_pin, OUTPUT);
     digitalWrite(CCLR_pin, HIGH);
+
+    for (uint8_t pin: bus_pins) {
+        pinMode(pin, INPUT);
+    }
 }
 
 void CounterIC::save_counts_to_register() {
