@@ -35,6 +35,10 @@ private:
         A,
         B
     };
+    enum class Byte {
+        Lower,
+        Upper
+    };
 
     // Register A lower byte, active-low puts lower byte of counter A on the Y bus.
     const uint8_t GAL_pin = 24;
@@ -55,7 +59,7 @@ private:
     const uint8_t bus_pins[bus_size] = {30, 31, 32, 33, 34, 35, 36, 37};
 
     // Reads the byte that is currently on the Y bus.
-    uint32_t read_bus();
+    uint32_t read_bus(Register reg, Byte byte);
 
     // Reads a whole register (16 bit).
     uint32_t read_register(Register reg);

@@ -45,34 +45,11 @@ uint32_t CounterIC::read_register(Register reg) {
      *  this function will attempt to read the parallel data pins from the
      *  SN74LV8154 by default.
      */
-    uint32_t data_out = 0x00;
-
-    save_counts_to_register();
-
-    //Read A counter
     if (reg == Register::A) {
-        digitalWrite(GAU_pin, LOW);
-        delayMicroseconds(2);
-        data_out = read_bus();
-        digitalWrite(GAU_pin, HIGH);
-
-        digitalWrite(GAL_pin, LOW);
-        delayMicroseconds(2);
-        data_out = (data_out << 8) | read_bus();
-        digitalWrite(GAL_pin, HIGH);
-    } else if (reg == Register::B) {
-        digitalWrite(GBU_pin, LOW);
-        delayMicroseconds(2);
-        data_out = read_bus();
-        digitalWrite(GBU_pin, HIGH);
-
-        digitalWrite(GBL_pin, LOW);
-        delayMicroseconds(2);
-        data_out = (data_out << 8) | read_bus();
-        digitalWrite(GBL_pin, HIGH);
+        return read_bus(reg, Byte::Upper) | read_bus(reg, Byte::Lower);
+    } else {
+        return (read_bus(reg, Byte::Upper) | read_bus(reg, Byte::Lower)) << 16;
     }
-
-    return data_out;
 }
 
 uint32_t CounterIC::read_counter() {
@@ -81,10 +58,8 @@ uint32_t CounterIC::read_counter() {
      *  by either connecting the CLKBEN pin to the RCOA pin or toggling Counter B on using this
      *  library when an overflow occurs on Counter A.
      */
-    uint32_t low_byte = read_register(Register::A);
-    uint32_t high_byte = read_register(Register::B);
-
-    return (high_byte << 16) | low_byte;
+    save_counts_to_register();
+    return read_register(Register::A) | read_register(Register::B);
 }
 
 void CounterIC::reset_counter() const {
@@ -96,12 +71,25 @@ void CounterIC::reset_counter() const {
     digitalWrite(CCLR_pin, HIGH);
 }
 
-uint32_t CounterIC::read_bus() {
+uint32_t CounterIC::read_bus(Register reg, Byte byte) {
     uint32_t data_out = 0x00;
+
+    uint8_t pin = reg == Register::A ?
+                  (byte == Byte::Lower ? GAL_pin : GAU_pin) :
+                  (byte == Byte::Lower ? GBL_pin : GBU_pin);
+
+    digitalWrite(pin, LOW);
+    delayMicroseconds(2);
 
     for (int i = 0; i < bus_size; ++i) {
         data_out = data_out | (digitalRead(bus_pins[i]) << i);
     }
 
-    return data_out;
+    digitalWrite(pin, HIGH);
+
+    if (byte == Byte::Lower) {
+        return data_out;
+    } else {
+        return data_out << 8;
+    }
 }
