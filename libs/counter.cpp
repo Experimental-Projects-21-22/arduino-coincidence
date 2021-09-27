@@ -1,17 +1,13 @@
-/*counter.cpp - Source file for SN74LV8154 IC driver
-  Copyright (c) 2020 Justin Holland.  All right reserved.
-
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  Modified by Julian van Doorn.
+/*
+ * This file (counter.cpp) is based on the work of Justin Holland (c) 2020. It was released under the GNU Lesser General
+ * Public License as published by the Free Software Foundation (version 2.1).
+ *
+ * This file has been modified to suit our needs in the following way:
+ *  - Remove support for dual counter mode;
+ *  - Use of 3 SN74LV8154 chips in parallel;
+ *
+ * This modification has been done by Julian van Doorn <j.c.b.van.doorn@umail.leidenuniv.nl>. The software is subject to
+ * the original license.
  */
 
 #include "Arduino.h"
