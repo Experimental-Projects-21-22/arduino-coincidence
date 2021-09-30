@@ -16,6 +16,7 @@ void loop() {
     // Check if there is a command available.
     if (Serial.available() == 0) return;
 
+    // This byte will contain the command to execute.
     uint8_t in_byte = Serial.read();
 
     if (in_byte == 0x73) {
@@ -33,6 +34,7 @@ void loop() {
             Serial.print(": ");
             Serial.println(counts[i]);
         }
+        Serial.println("*******************************");
     } else if (in_byte == 0x63) {
         // "c" input clears the counters
         counter.reset_counter();
