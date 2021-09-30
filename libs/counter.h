@@ -17,14 +17,20 @@ class CounterIC {
 public:
     CounterIC() = default;
 
+    // Number of counters.
+    static const uint8_t counters = 3;
+
     // Sets the mode of each pin and prepares the counters.
     void setup() const;
 
-    // Reads the value of the counter.
-    uint32_t read_counter();
+    // Puts the counts onto the registers such that they can be read.
+    void save_counts_to_register() const;
 
     // Resets the counter to 0.
     void reset_counter() const;
+
+    // Reads out all the counters.
+    void read_counters(uint32_t *out);
 
 private:
     static const uint8_t bus_size = 8;
@@ -54,16 +60,20 @@ private:
     const uint8_t CCLR_pin = 29;
 
     // Data output bits 0 - 7, bus_pins[0] -> Y0 (LSB) - bus_pins[7] -> Y7 (MSB).
-    const uint8_t bus_pins[bus_size] = {30, 31, 32, 33, 34, 35, 36, 37};
+    const uint8_t bus_pins[counters][bus_size] = {
+            {30, 31, 32, 33, 34, 35, 36, 37}, // Detector 1
+            {38, 39, 40, 41, 42, 43, 44, 45}, // Detector 2
+            {46, 47, 48, 49, 50, 51, 52, 53}  // Coincidences
+    };
 
-    // Reads the byte that is currently on the Y bus.
-    uint8_t read_bus(Register reg, Byte byte);
+    // Reads the value of the counter.
+    uint32_t read_counter(uint8_t counter);
 
     // Reads a whole register (16 bit).
-    uint16_t read_register(Register reg);
+    uint16_t read_register(uint8_t counter, Register reg);
 
-    // Puts the counts onto the registers such that they can be read.
-    void save_counts_to_register() const;
+    // Reads the byte that is currently on the Y bus.
+    uint8_t read_bus(uint8_t counter, Register reg, Byte byte);
 };
 
 #endif /* COUNTER_H_ */

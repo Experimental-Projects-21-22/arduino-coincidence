@@ -29,8 +29,10 @@ void CounterIC::setup() const {
     pinMode(CCLR_pin, OUTPUT);
     digitalWrite(CCLR_pin, HIGH);
 
-    for (uint8_t pin: bus_pins) {
-        pinMode(pin, INPUT);
+    for (const auto &bus: bus_pins) {
+        for (const auto &pin: bus) {
+            pinMode(pin, INPUT);
+        }
     }
 }
 
@@ -40,7 +42,7 @@ void CounterIC::save_counts_to_register() const {
     digitalWrite(RCLK_pin, LOW);
 }
 
-uint16_t CounterIC::read_register(Register reg) {
+uint16_t CounterIC::read_register(uint8_t counter, Register reg) {
     /*  Read the value stored on the internal register of the SN74LV8154
      *  Argument: "A" for counter A
      *			  "B" for counter B
@@ -49,17 +51,27 @@ uint16_t CounterIC::read_register(Register reg) {
      *  this function will attempt to read the parallel data pins from the
      *  SN74LV8154 by default.
      */
-    return read_bus(reg, Byte::Upper) << 8 | read_bus(reg, Byte::Lower);
+    return read_bus(counter, reg, Byte::Upper) << 8 | read_bus(counter, reg, Byte::Lower);
 }
 
-uint32_t CounterIC::read_counter() {
+uint32_t CounterIC::read_counter(uint8_t counter) {
     /*  Read the 32-bit value stored on the internal register of the SN74LV8154
      *  This function can only be called when the IC is configured as a single 32-bit counter
      *  by either connecting the CLKBEN pin to the RCOA pin or toggling Counter B on using this
      *  library when an overflow occurs on Counter A.
      */
-    save_counts_to_register();
-    return read_register(Register::B) << 16 | read_register(Register::A);
+    return read_register(counter, Register::B) << 16 | read_register(counter, Register::A);
+}
+
+void CounterIC::read_counters(uint32_t *out) {
+    /*
+     * Reads the value of each counter and stores it in the out array.
+     */
+
+    // Read out all the counters
+    for (int i = 0; i < counters; ++i) {
+        out[i] = read_counter(i);
+    }
 }
 
 void CounterIC::reset_counter() const {
@@ -71,7 +83,7 @@ void CounterIC::reset_counter() const {
     digitalWrite(CCLR_pin, HIGH);
 }
 
-uint8_t CounterIC::read_bus(Register reg, Byte byte) {
+uint8_t CounterIC::read_bus(uint8_t counter, Register reg, Byte byte) {
     uint8_t data_out = 0;
 
     uint8_t pin = reg == Register::A ?
@@ -82,7 +94,7 @@ uint8_t CounterIC::read_bus(Register reg, Byte byte) {
     delayMicroseconds(2);
 
     for (int i = 0; i < bus_size; ++i) {
-        data_out = data_out | (digitalRead(bus_pins[i]) << i);
+        data_out = data_out | (digitalRead(bus_pins[counter][i]) << i);
     }
 
     digitalWrite(pin, HIGH);
