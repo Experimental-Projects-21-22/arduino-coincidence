@@ -59,7 +59,7 @@ uint32_t CounterIC::read_counter(uint8_t counter) {
      *  by either connecting the CLKBEN pin to the RCOA pin or toggling Counter B on using this
      *  library when an overflow occurs on Counter A.
      */
-    return read_register(counter, Register::B) << 16 | read_register(counter, Register::A);
+    return ((uint32_t) read_register(counter, Register::B)) << 16 | read_register(counter, Register::A);
 }
 
 uint16_t CounterIC::read_register(uint8_t counter, Register reg) {
@@ -71,7 +71,7 @@ uint16_t CounterIC::read_register(uint8_t counter, Register reg) {
      *  this function will attempt to read the parallel data pins from the
      *  SN74LV8154 by default.
      */
-    return read_bus(counter, reg, Byte::Upper) << 8 | read_bus(counter, reg, Byte::Lower);
+    return ((uint16_t) read_bus(counter, reg, Byte::Upper)) << 8 | read_bus(counter, reg, Byte::Lower);
 }
 
 uint8_t CounterIC::read_bus(uint8_t counter, Register reg, Byte byte) {
@@ -80,7 +80,6 @@ uint8_t CounterIC::read_bus(uint8_t counter, Register reg, Byte byte) {
     uint8_t pin = reg == Register::A ?
                   (byte == Byte::Lower ? GAL_pin : GAU_pin) :
                   (byte == Byte::Lower ? GBL_pin : GBU_pin);
-
     digitalWrite(pin, LOW);
     delayMicroseconds(2);
 
@@ -89,7 +88,6 @@ uint8_t CounterIC::read_bus(uint8_t counter, Register reg, Byte byte) {
     }
 
     digitalWrite(pin, HIGH);
-
     return data_out;
 }
 
