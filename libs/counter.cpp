@@ -42,27 +42,6 @@ void CounterIC::save_counts_to_register() const {
     digitalWrite(RCLK_pin, LOW);
 }
 
-uint16_t CounterIC::read_register(uint8_t counter, Register reg) {
-    /*  Read the value stored on the internal register of the SN74LV8154
-     *  Argument: "A" for counter A
-     *			  "B" for counter B
-     *  If a shift register object has been attached to this counter object
-     *  it will automatically be used to retrieve the counter values.  Otherwise,
-     *  this function will attempt to read the parallel data pins from the
-     *  SN74LV8154 by default.
-     */
-    return read_bus(counter, reg, Byte::Upper) << 8 | read_bus(counter, reg, Byte::Lower);
-}
-
-uint32_t CounterIC::read_counter(uint8_t counter) {
-    /*  Read the 32-bit value stored on the internal register of the SN74LV8154
-     *  This function can only be called when the IC is configured as a single 32-bit counter
-     *  by either connecting the CLKBEN pin to the RCOA pin or toggling Counter B on using this
-     *  library when an overflow occurs on Counter A.
-     */
-    return read_register(counter, Register::B) << 16 | read_register(counter, Register::A);
-}
-
 void CounterIC::read_counters(uint32_t *out) {
     /*
      * Reads the value of each counter and stores it in the out array.
@@ -74,13 +53,25 @@ void CounterIC::read_counters(uint32_t *out) {
     }
 }
 
-void CounterIC::reset_counter() const {
-    /*  This function clears the values stored in the internal register in the SN74LV8154
-     *  for both counters A and B.
+uint32_t CounterIC::read_counter(uint8_t counter) {
+    /*  Read the 32-bit value stored on the internal register of the SN74LV8154
+     *  This function can only be called when the IC is configured as a single 32-bit counter
+     *  by either connecting the CLKBEN pin to the RCOA pin or toggling Counter B on using this
+     *  library when an overflow occurs on Counter A.
      */
-    digitalWrite(CCLR_pin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(CCLR_pin, HIGH);
+    return read_register(counter, Register::B) << 16 | read_register(counter, Register::A);
+}
+
+uint16_t CounterIC::read_register(uint8_t counter, Register reg) {
+    /*  Read the value stored on the internal register of the SN74LV8154
+     *  Argument: "A" for counter A
+     *			  "B" for counter B
+     *  If a shift register object has been attached to this counter object
+     *  it will automatically be used to retrieve the counter values.  Otherwise,
+     *  this function will attempt to read the parallel data pins from the
+     *  SN74LV8154 by default.
+     */
+    return read_bus(counter, reg, Byte::Upper) << 8 | read_bus(counter, reg, Byte::Lower);
 }
 
 uint8_t CounterIC::read_bus(uint8_t counter, Register reg, Byte byte) {
@@ -100,4 +91,13 @@ uint8_t CounterIC::read_bus(uint8_t counter, Register reg, Byte byte) {
     digitalWrite(pin, HIGH);
 
     return data_out;
+}
+
+void CounterIC::reset_counter() const {
+    /*  This function clears the values stored in the internal register in the SN74LV8154
+     *  for both counters A and B.
+     */
+    digitalWrite(CCLR_pin, LOW);
+    delayMicroseconds(2);
+    digitalWrite(CCLR_pin, HIGH);
 }
