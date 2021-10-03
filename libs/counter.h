@@ -10,8 +10,8 @@
  * the original license.
  */
 
-#ifndef COUNTER_H_
-#define COUNTER_H_
+#ifndef ARDUINO_COINCIDENCE_COUNTER_H
+#define ARDUINO_COINCIDENCE_COUNTER_H
 
 class CounterIC {
 public:
@@ -76,4 +76,4 @@ private:
     uint8_t read_bus(uint8_t counter, Register reg, Byte byte);
 };
 
-#endif /* COUNTER_H_ */
+#endif /* ARDUINO_COINCIDENCE_COUNTER_H */
