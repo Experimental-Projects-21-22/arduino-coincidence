@@ -19,7 +19,9 @@ void DelayLine::set_delay(uint8_t value) const {
 
     // Write the value LSB to MSB over serial.
     for (int i = 8; i > 0; --i) {
+        // Set the correct bit on the D pin
         digitalWrite(D_pin, ((value >> i) & 0x01));
+        // Trigger the clock
         digitalWrite(CLK_pin, HIGH);
         delayMicroseconds(1);
         digitalWrite(CLK_pin, LOW);
@@ -28,4 +30,6 @@ void DelayLine::set_delay(uint8_t value) const {
 
     // Disable writing to the delay line.
     digitalWrite(LE_pin, LOW);
+    // Reset the D pin
+    digitalWrite(D_pin, LOW);
 }
