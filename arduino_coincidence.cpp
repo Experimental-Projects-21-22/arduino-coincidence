@@ -84,7 +84,7 @@ void loop() {
             Serial.println(counts[2]);
         } else if (command == "CLEAR") {
             // Clears the counters.
-            counter.reset_counter();
+            counter.reset_counters();
             if (verbose) Serial.println("Counters cleared.");
         } else if (command.startsWith("SD")) {
             // Sets a specific delay.

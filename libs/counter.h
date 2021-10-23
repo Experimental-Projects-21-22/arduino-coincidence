@@ -15,6 +15,7 @@
 
 class CounterIC {
 public:
+    // Use a default constructor.
     CounterIC() = default;
 
     // Number of counters.
@@ -27,18 +28,20 @@ public:
     void save_counts_to_register() const;
 
     // Resets the counter to 0.
-    void reset_counter() const;
+    void reset_counters() const;
 
     // Reads out all the counters.
     void read_counters(uint32_t *out);
 
 private:
+    // The bus size is one byte (8 bits).
     static const uint8_t bus_size = 8;
-
+    // The two available registers on each chip.
     enum class Register {
         A,
         B
     };
+    // Each register has an upper and a lower byte.
     enum class Byte {
         Lower,
         Upper
@@ -69,7 +72,7 @@ private:
     // Reads the value of the counter.
     uint32_t read_counter(uint8_t counter);
 
-    // Reads a whole register (16 bit).
+    // Reads a whole register.
     uint16_t read_register(uint8_t counter, Register reg);
 
     // Reads the byte that is currently on the Y bus.

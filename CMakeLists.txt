@@ -19,7 +19,7 @@ set(${PROJECT_NAME}_HDRS
 
 #### Additional settings for programmer. From programmers.txt
 set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
-set(${PROJECT_NAME}_PORT /dev/cu.usbmodem14401)
+set(${PROJECT_NAME}_PORT /dev/cu.usbmodem14301)
 set(mega.upload.speed 9600)
 
 ## Verbose build process
