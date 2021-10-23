@@ -93,7 +93,7 @@ void loop() {
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).increment_delay(target_value);
-        } else if (command.startsWith("ID")) {
+        } else if (command.startsWith("DD")) {
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).decrement_delay(target_value);
