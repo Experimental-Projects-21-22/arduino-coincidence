@@ -2,6 +2,9 @@
 #include "libs/counter.h"
 #include "libs/delay.h"
 
+// Set to true to turn on verbose logging -- useful for testing.
+bool verbose = false;
+
 // The counter interface
 CounterIC counter;
 
@@ -59,44 +62,48 @@ void loop() {
     if ('0' <= next_byte and next_byte <= '9') {
         // Completely read in numerical values
         target_value = (uint8_t) Serial.parseInt();
-        // Here we should do something with the received value.
-        Serial.print("Received a number: ");
-        Serial.println(target_value);
+        if (verbose) Serial.println("Received numerical data.");
     } else {
         String command = Serial.readStringUntil('\n');
 
-        if (command == "SAVE") {
+        if (command == "VERB") {
+            // Toggles verbose mode.
+            verbose = !verbose;
+            if (verbose) Serial.println("Verbose logging turned on.");
+        } else if (command == "SAVE") {
             // Saves the value in the counters to their registers.
             counter.save_counts_to_register();
-            Serial.println("Counts saved to register!");
+            if (verbose) Serial.println("Counts saved to register.");
         } else if (command == "READ") {
             // Reads the stored values and prints them to serial.
             counter.read_counters(counts);
-
-            Serial.println("*******************************");
-            for (int i = 0; i < CounterIC::counters; ++i) {
-                Serial.print("Counts on counter ");
-                Serial.print(i);
-                Serial.print(": ");
-                Serial.println(counts[i]);
-            }
-            Serial.println("*******************************");
+            Serial.print(counts[0]);
+            Serial.print(",");
+            Serial.print(counts[1]);
+            Serial.print(",");
+            Serial.println(counts[2]);
         } else if (command == "CLEAR") {
-            // Clears the counters
+            // Clears the counters.
             counter.reset_counter();
-            Serial.println("Counters cleared!");
+            if (verbose) Serial.println("Counters cleared.");
         } else if (command.startsWith("SD")) {
+            // Sets a specific delay.
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).set_delay(target_value);
+            if (verbose) Serial.println("Set delay.");
         } else if (command.startsWith("ID")) {
+            // Increments a delay.
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).increment_delay(target_value);
+            if (verbose) Serial.println("Incremented delay.");
         } else if (command.startsWith("DD")) {
+            // Decrements a delay.
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).decrement_delay(target_value);
+            if (verbose) Serial.println("Decremented delay.");
         }
     }
 }
