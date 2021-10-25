@@ -104,6 +104,11 @@ void loop() {
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).decrement_delay(target_value);
             if (verbose) Serial.println("Decremented delay.");
+        } else if (command.startsWith("GD")) {
+            // Gets a delay.
+            char line = command.charAt(2);
+            char detector_id = command.charAt(3);
+            Serial.println(get_delay_line(line, detector_id).get_delay());
         }
     }
 }

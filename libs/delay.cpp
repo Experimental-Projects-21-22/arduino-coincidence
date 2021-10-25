@@ -56,3 +56,7 @@ void SerialInterface::stream(uint8_t data) const {
     // Reset the D pin
     digitalWrite(D_pin, LOW);
 }
+
+uint8_t DelayLine::get_delay() {
+    return delay;
+}

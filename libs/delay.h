@@ -36,6 +36,9 @@ public:
     // Decrements the delay with a specific value.
     void decrement_delay(uint8_t value);
 
+    // Returns the current delay value.
+    uint8_t get_delay();
+
 private:
     // Latch pin to enable writing to the delay line.
     const uint8_t latch_pin;
