@@ -43,7 +43,7 @@ void SerialInterface::setup() const {
 
 void SerialInterface::stream(uint8_t data) const {
     // Write the value LSB to MSB over serial.
-    for (int i = 0; i < 8; --i) {
+    for (int i = 0; i < 8; i++) {
         // Set the correct bit on the D pin
         digitalWrite(D_pin, ((data >> i) & 0x01));
         // Trigger the clock
