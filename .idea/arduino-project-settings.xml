@@ -4,6 +4,6 @@
     <option name="baudRate" value="115200" />
     <option name="immediateSend" value="false" />
     <option name="logSentText" value="false" />
-    <option name="port" value="/dev/cu.usbmodem14401" />
+    <option name="port" value="/dev/cu.usbmodem14301" />
   </component>
 </project>
