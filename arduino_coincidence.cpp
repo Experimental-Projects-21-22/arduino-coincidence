@@ -9,15 +9,13 @@ bool verbose = false;
 CounterIC counter;
 
 // Digital pins used by the delay lines
-uint8_t CLK_pin = 3;
-uint8_t D_pin = 2;
 uint8_t WLE1_pin = 4;
 uint8_t CLE1_pin = 5;
 uint8_t WLE2_pin = 7;
 uint8_t CLE2_pin = 6;
 
 // The various delay lines (use a common serial interface)
-SerialInterface serial_interface(CLK_pin, D_pin);
+SerialInterface serial_interface;
 DelayLine delay_WA(WLE1_pin, serial_interface);
 DelayLine delay_CA(CLE1_pin, serial_interface);
 DelayLine delay_WB(WLE2_pin, serial_interface);

@@ -3,7 +3,7 @@
 
 class SerialInterface {
 public:
-    SerialInterface(const uint8_t CLK, const uint8_t D) : CLK_pin(CLK), D_pin(D) {}
+    SerialInterface() = default;
 
     // Properly sets the pin modes.
     void setup() const;
@@ -13,9 +13,9 @@ public:
 
 private:
     // The CLK (clock) pin of the serial interface with the delay lines.
-    const uint8_t CLK_pin;
+    const uint8_t CLK_pin = 3;
     // The D (data) pin of the serial interface with the delay lines.
-    const uint8_t D_pin;
+    const uint8_t D_pin = 2;
 };
 
 class DelayLine {

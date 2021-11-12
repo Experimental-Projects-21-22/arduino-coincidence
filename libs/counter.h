@@ -65,8 +65,8 @@ private:
     // Data output bits 0 - 7, bus_pins[0] -> Y0 (LSB) - bus_pins[7] -> Y7 (MSB).
     const uint8_t bus_pins[counters][bus_size] = {
             {30, 31, 32, 33, 34, 35, 36, 37}, // Detector 1
-            {38, 39, 40, 41, 42, 43, 44, 45}, // Detector 2
-            {46, 47, 48, 49, 50, 51, 52, 53}  // Coincidences
+            {46, 47, 48, 49, 50, 51, 52, 53}, // Detector 2
+            {38, 39, 40, 41, 42, 43, 44, 45}  // Coincidences
     };
 
     // Reads the value of the counter.
