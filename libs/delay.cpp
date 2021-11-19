@@ -42,10 +42,11 @@ void SerialInterface::setup() const {
 }
 
 void SerialInterface::stream(uint8_t data) const {
-    // Write the value LSB to MSB over serial.
-    for (int i = 0; i < 8; i++) {
+    // Write the value MSB to LSB over serial.
+    for (int i = 8; i > 0; --i) {
         // Set the correct bit on the D pin
-        digitalWrite(D_pin, (data & (0x01 << i)));
+        digitalWrite(D_pin, (data >> (i - 1)) & 0x01);
+        Serial.println((data >> (i - 1)) & 0x01);
         // Trigger the clock
         digitalWrite(CLK_pin, HIGH);
         digitalWrite(CLK_pin, LOW);
