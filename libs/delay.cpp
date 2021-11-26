@@ -46,7 +46,6 @@ void SerialInterface::stream(uint8_t data) const {
     for (int i = 8; i > 0; --i) {
         // Set the correct bit on the D pin
         digitalWrite(D_pin, (data >> (i - 1)) & 0x01);
-        Serial.println((data >> (i - 1)) & 0x01);
         // Trigger the clock
         digitalWrite(CLK_pin, HIGH);
         digitalWrite(CLK_pin, LOW);
