@@ -60,7 +60,7 @@ void loop() {
     if ('0' <= next_byte and next_byte <= '9') {
         // Completely read in numerical values
         target_value = (uint8_t) Serial.parseInt();
-        if (verbose) Serial.println("Received numerical data.");
+        if (verbose) Serial.print("Received numerical data: " + String(target_value));
     } else {
         String command = Serial.readStringUntil('\n');
 
@@ -89,19 +89,19 @@ void loop() {
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).set_delay(target_value);
-            if (verbose) Serial.println("Set delay.");
+            if (verbose) Serial.println("Setting delay: " + line + detector_id);
         } else if (command.startsWith("ID")) {
             // Increments a delay.
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).increment_delay(target_value);
-            if (verbose) Serial.println("Incremented delay.");
+            if (verbose) Serial.println("Incrementing delay: " + line + detector_id);
         } else if (command.startsWith("DD")) {
             // Decrements a delay.
             char line = command.charAt(2);
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).decrement_delay(target_value);
-            if (verbose) Serial.println("Decremented delay.");
+            if (verbose) Serial.println("Decrementing delay: " + line + detector_id);
         } else if (command.startsWith("GD")) {
             // Gets a delay.
             char line = command.charAt(2);
