@@ -21,18 +21,6 @@ void DelayLine::set_delay(uint8_t value) {
     update_delay();
 }
 
-void DelayLine::increment_delay(uint8_t value) {
-    // Update the internal value of delay
-    delay += value;
-    update_delay();
-}
-
-void DelayLine::decrement_delay(uint8_t value) {
-    // Update the internal value of delay
-    delay -= value;
-    update_delay();
-}
-
 void SerialInterface::setup() const {
     pinMode(CLK_pin, OUTPUT);
     digitalWrite(CLK_pin, LOW);
@@ -53,8 +41,4 @@ void SerialInterface::stream(uint8_t data) const {
 
     // Reset the D pin
     digitalWrite(D_pin, LOW);
-}
-
-uint8_t DelayLine::get_delay() {
-    return delay;
 }

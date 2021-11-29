@@ -3,7 +3,7 @@
 #include "libs/delay.h"
 
 // Set to true to turn on verbose logging -- useful for testing.
-bool verbose = false;
+bool verbose = true;
 
 // The counter interface
 CounterIC counter;
@@ -90,23 +90,9 @@ void loop() {
             char detector_id = command.charAt(3);
             get_delay_line(line, detector_id).set_delay(target_value);
             if (verbose) Serial.println("Setting delay: " + line + detector_id);
-        } else if (command.startsWith("ID")) {
-            // Increments a delay.
-            char line = command.charAt(2);
-            char detector_id = command.charAt(3);
-            get_delay_line(line, detector_id).increment_delay(target_value);
-            if (verbose) Serial.println("Incrementing delay: " + line + detector_id);
-        } else if (command.startsWith("DD")) {
-            // Decrements a delay.
-            char line = command.charAt(2);
-            char detector_id = command.charAt(3);
-            get_delay_line(line, detector_id).decrement_delay(target_value);
-            if (verbose) Serial.println("Decrementing delay: " + line + detector_id);
-        } else if (command.startsWith("GD")) {
-            // Gets a delay.
-            char line = command.charAt(2);
-            char detector_id = command.charAt(3);
-            Serial.println(get_delay_line(line, detector_id).get_delay());
+        } else {
+            // Unknown command.
+            if (verbose) Serial.println("Unknown command: " + command);
         }
     }
 }
