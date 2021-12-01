@@ -60,7 +60,7 @@ void loop() {
     if ('0' <= next_byte and next_byte <= '9') {
         // Completely read in numerical values
         target_value = (uint8_t) Serial.parseInt();
-        if (verbose) Serial.print("Received numerical data: " + String(target_value));
+        if (verbose) Serial.println("Received numerical data: " + String(target_value));
     } else {
         String command = Serial.readStringUntil('\n');
 
