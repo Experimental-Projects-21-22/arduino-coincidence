@@ -60,7 +60,10 @@ void loop() {
     if ('0' <= next_byte and next_byte <= '9') {
         // Completely read in numerical values
         target_value = (uint8_t) Serial.parseInt();
-        if (verbose) Serial.println("Received numerical data: " + String(target_value));
+        if (verbose) {
+            Serial.print("Received numerical data: ");
+            Serial.println(target_value, DEC);
+        }
     } else {
         String command = Serial.readStringUntil('\n');
 
@@ -75,11 +78,11 @@ void loop() {
         } else if (command == "READ") {
             // Reads the stored values and prints them to serial.
             counter.read_counters(counts);
-            Serial.print(counts[0]);
+            Serial.print(counts[0], DEC);
             Serial.print(",");
-            Serial.print(counts[1]);
+            Serial.print(counts[1], DEC);
             Serial.print(",");
-            Serial.println(counts[2]);
+            Serial.println(counts[2], DEC);
         } else if (command == "CLEAR") {
             // Clears the counters.
             counter.reset_counters();
