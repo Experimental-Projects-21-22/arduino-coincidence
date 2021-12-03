@@ -42,6 +42,14 @@ DelayLine get_delay_line(char line, char detector_id) {
     }
 }
 
+void print_counts() {
+    Serial.print(counts[0], DEC);
+    Serial.print(",");
+    Serial.print(counts[1], DEC);
+    Serial.print(",");
+    Serial.println(counts[2], DEC);
+}
+
 void process_numerical_command() {
     // Completely read in numerical values
     target_value = (uint8_t) Serial.parseInt();
@@ -67,11 +75,13 @@ void process_character_command() {
     } else if (command == "READ") {
         // Reads the stored values and prints them to serial.
         counter.read_counters(counts);
-        Serial.print(counts[0], DEC);
-        Serial.print(",");
-        Serial.print(counts[1], DEC);
-        Serial.print(",");
-        Serial.println(counts[2], DEC);
+        print_counts();
+    } else if (command == "MEASURE") {
+        counter.reset_counters();
+        delay(1000 * ((long) target_value));
+        counter.save_counts_to_register();
+        counter.read_counters(counts);
+        print_counts();
     } else if (command == "CLEAR") {
         // Clears the counters.
         counter.reset_counters();
