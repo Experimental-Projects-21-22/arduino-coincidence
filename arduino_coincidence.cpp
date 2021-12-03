@@ -58,6 +58,8 @@ void process_character_command() {
         // Toggles verbose mode.
         verbose = !verbose;
         if (verbose) Serial.println("Verbose logging turned on.");
+    } else if (command == "PING") {
+        Serial.println("PONG");
     } else if (command == "SAVE") {
         // Saves the value in the counters to their registers.
         counter.save_counts_to_register();
@@ -79,10 +81,11 @@ void process_character_command() {
         char line = command.charAt(2);
         char detector_id = command.charAt(3);
         get_delay_line(line, detector_id).set_delay(target_value);
-        if (verbose) Serial.println("Setting delay: " + line + detector_id);
-    } else {
-        // Unknown command.
-        if (verbose) Serial.println("Unknown command: " + command);
+        if (verbose) {
+            Serial.print("Setting delay on: ");
+            Serial.print(line);
+            Serial.println(detector_id);
+        }
     }
 }
 
