@@ -7,7 +7,7 @@
  *  - Use of 3 SN74LV8154 chips in parallel;
  *
  * This modification has been done by Julian van Doorn <j.c.b.van.doorn@umail.leidenuniv.nl>. The software is subject to
- * the original license.
+ * the original license. For the original license see licenses/original_license_counters.
  */
 
 #ifndef ARDUINO_COINCIDENCE_COUNTER_H
