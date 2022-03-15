@@ -30,15 +30,17 @@ uint32_t counts[CounterIC::counters] = {0};
 // Value used to store numerical data sent to the Arduino
 uint8_t target_value = 0;
 
-DelayLine get_delay_line(char line, char detector_id) {
+DelayLine *get_delay_line(char line, char detector_id) {
     if (line == 'C' and detector_id == 'A') {
-        return delay_CA;
+        return &delay_CA;
     } else if (line == 'C' and detector_id == 'B') {
-        return delay_CB;
+        return &delay_CB;
     } else if (line == 'W' and detector_id == 'A') {
-        return delay_WA;
+        return &delay_WA;
     } else if (line == 'W' and detector_id == 'B') {
-        return delay_WB;
+        return &delay_WB;
+    } else {
+        return nullptr;
     }
 }
 
@@ -90,11 +92,18 @@ void process_character_command() {
         // Sets a specific delay.
         char line = command.charAt(2);
         char detector_id = command.charAt(3);
-        get_delay_line(line, detector_id).set_delay(target_value);
-        if (verbose) {
-            Serial.print("Setting delay on: ");
-            Serial.print(line);
-            Serial.println(detector_id);
+        DelayLine *delayLine = get_delay_line(line, detector_id);
+        if (delayLine != nullptr) {
+            delayLine->set_delay(target_value);
+            if (verbose) {
+                Serial.print("Delay set to ");
+                Serial.print(target_value, DEC);
+                Serial.print(" steps for: ");
+                Serial.print(line);
+                Serial.println(detector_id);
+            }
+        } else {
+            if (verbose) Serial.println("Invalid line or detector.");
         }
     }
 }
