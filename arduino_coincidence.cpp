@@ -1,3 +1,10 @@
+/*
+ * This file, arduino_coincidence.cpp, is the main file of this project. It instantiates the delay lines and the
+ * interface to the on-device counter chips. It uses a serial connection to communicate with a PC.
+ *
+ * This software is written by Julian van Doorn <j.c.b.van.doorn@umail.leidenuniv.nl>.
+ */
+
 #include "Arduino.h"
 #include "libs/counter.h"
 #include "libs/delay.h"
